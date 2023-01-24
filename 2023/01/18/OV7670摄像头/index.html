@@ -42,7 +42,7 @@
 <meta property="og:image" content="http://example.com/2023/01/18/OV7670%E6%91%84%E5%83%8F%E5%A4%B4/RGB555.png">
 <meta property="og:image" content="http://example.com/2023/01/18/OV7670%E6%91%84%E5%83%8F%E5%A4%B4/RGB444.png">
 <meta property="article:published_time" content="2023-01-18T06:57:39.000Z">
-<meta property="article:modified_time" content="2023-01-24T13:44:13.674Z">
+<meta property="article:modified_time" content="2023-01-24T13:49:10.837Z">
 <meta property="article:author" content="杰爷爷泡的茶">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:image" content="http://example.com/2023/01/18/OV7670%E6%91%84%E5%83%8F%E5%A4%B4/OV7670%E5%86%85%E9%83%A8%E6%A1%86%E6%9E%B6%E5%9B%BE.png">
@@ -215,7 +215,7 @@
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2023-01-24 21:44:13" itemprop="dateModified" datetime="2023-01-24T21:44:13+08:00">2023-01-24</time>
+                <time title="修改时间：2023-01-24 21:49:10" itemprop="dateModified" datetime="2023-01-24T21:49:10+08:00">2023-01-24</time>
               </span>
 
           
@@ -242,9 +242,9 @@
 <!-- code_chunk_output -->
 
 <ul>
-<li><a href="#-ov7670%E6%91%84%E5%83%8F%E5%A4%B4%E6%A8%A1%E5%9D%97">OV7670摄像头模块</a><ul>
-<li><a href="#-%E4%B8%BB%E4%BD%93%E4%BF%A1%E5%8F%B7%E8%BE%93%E5%85%A5%E6%A8%A1%E5%9D%97a-idov_mod_1a">主体信号输入模块</a></li>
-<li><a href="#-sccb%E6%80%BB%E7%BA%BF%E6%A8%A1%E5%9D%97a-idov_mod_2a">SCCB总线模块</a></li>
+<li><a href="#-ov7670%E6%91%84%E5%83%8F%E5%A4%B4%E6%A8%A1%E5%9D%97a-idov7670%E6%91%84%E5%83%8F%E5%A4%B4%E6%A8%A1%E5%9D%97aa">OV7670摄像头模块</a><ul>
+<li><a href="#-%E4%B8%BB%E4%BD%93%E4%BF%A1%E5%8F%B7%E8%BE%93%E5%85%A5%E6%A8%A1%E5%9D%97a-id%E4%B8%BB%E4%BD%93%E4%BF%A1%E5%8F%B7%E8%BE%93%E5%85%A5%E6%A8%A1%E5%9D%97aa">主体信号输入模块</a></li>
+<li><a href="#-sccb%E6%80%BB%E7%BA%BF%E6%A8%A1%E5%9D%97a-idsccb%E6%80%BB%E7%BA%BF%E6%A8%A1%E5%9D%97aa">SCCB总线模块</a></li>
 <li><a href="#-dvp%E5%8D%8F%E8%AE%AE%E6%A8%A1%E5%9D%97a-idov_mod_3a">DVP协议模块</a></li>
 </ul>
 </li>
@@ -252,7 +252,7 @@
 <!-- /code_chunk_output -->
 
 <!-- 正文 -->
-<h1 id="OV7670摄像头模块"><a href="#OV7670摄像头模块" class="headerlink" title="OV7670摄像头模块"></a>OV7670摄像头模块</h1><p>OV7670&#x2F;OV7171 CAMERACHIPTM 图像传感器，体积小、工作电压低，提供单片 VGA 摄像头和影像处理器的所有功能。通过 SCCB 总线控制，可以输出整帧、子采样、取窗口等方式的各种分辨率 8 位影响数据。所有图像处理功能过程包括伽玛曲线、白平衡、饱和度、色度等都可以通过 SCCB 接口编程。</p>
+<h1 id="OV7670摄像头模块"><a href="#OV7670摄像头模块" class="headerlink" title="OV7670摄像头模块"></a>OV7670摄像头模块<a id="ov7670摄像头模块a"></a></h1><p>OV7670&#x2F;OV7171 CAMERACHIPTM 图像传感器，体积小、工作电压低，提供单片 VGA 摄像头和影像处理器的所有功能。通过 SCCB 总线控制，可以输出整帧、子采样、取窗口等方式的各种分辨率 8 位影响数据。所有图像处理功能过程包括伽玛曲线、白平衡、饱和度、色度等都可以通过 SCCB 接口编程。</p>
 <span id="more"></span>
 <p>其内部框架如下图所示：</p>
 <p><img src="/2023/01/18/OV7670%E6%91%84%E5%83%8F%E5%A4%B4/OV7670%E5%86%85%E9%83%A8%E6%A1%86%E6%9E%B6%E5%9B%BE.png" alt="OV7670内部框架"></p>
@@ -320,11 +320,11 @@
 
 <p>关于OV7670模块中，我自己根据自身理解和后面FPGA模块设计将整个模块分成三个部分</p>
 <ul>
-<li><a href="#OV_mod_1">主体信号输入模块</a>：整个模块的XCLK时钟信号、RESET复位信号、PWDN信号。</li>
-<li><a href="#OV_mod_2">SCCB总线模块</a>：SIO_C、SIO_D组成的SCCB总线，用于和OV7670模块进行通信用于读写OV7670模块内的寄存器，配置OV7670。</li>
-<li><a href="#OV_mod_3">DVP协议模块</a>：HREF、VSYNC、PCLK和8位像素数据，输出图像像素的相关信息。</li>
+<li><a href="#%E4%B8%BB%E4%BD%93%E4%BF%A1%E5%8F%B7%E8%BE%93%E5%85%A5%E6%A8%A1%E5%9D%97a">主体信号输入模块</a>：整个模块的XCLK时钟信号、RESET复位信号、PWDN信号。</li>
+<li><a href="#sccb%E6%80%BB%E7%BA%BF%E6%A8%A1%E5%9D%97a">SCCB总线模块</a>：SIO_C、SIO_D组成的SCCB总线，用于和OV7670模块进行通信用于读写OV7670模块内的寄存器，配置OV7670。</li>
+<li><a href="#dvp%E5%8D%8F%E8%AE%AE%E6%A8%A1%E5%9D%97a">DVP协议模块</a>：HREF、VSYNC、PCLK和8位像素数据，输出图像像素的相关信息。</li>
 </ul>
-<h2 id="主体信号输入模块"><a href="#主体信号输入模块" class="headerlink" title="主体信号输入模块"></a>主体信号输入模块<a id="OV_mod_1"></a></h2><p>XCLK信号是外部输入进OV7670的系统时钟信号，RESET复位信号就是简简单单的复位信号，PWDN信号全称是POWER DOWN，省电模式。该部分主要是列出XCLK时钟信号的时序约束条件，其条件如下图所示：</p>
+<h2 id="主体信号输入模块"><a href="#主体信号输入模块" class="headerlink" title="主体信号输入模块"></a>主体信号输入模块<a id="主体信号输入模块a"></a></h2><p>XCLK信号是外部输入进OV7670的系统时钟信号，RESET复位信号就是简简单单的复位信号，PWDN信号全称是POWER DOWN，省电模式。该部分主要是列出XCLK时钟信号的时序约束条件，其条件如下图所示：</p>
 <p><a id="RGB输出稳定时间"></a></p>
 <table>
 <thead>
@@ -378,7 +378,7 @@
 <td align="center">ms</td>
 </tr>
 </tbody></table>
-<h2 id="SCCB总线模块"><a href="#SCCB总线模块" class="headerlink" title="SCCB总线模块"></a>SCCB总线模块<a id="OV_mod_2"></a></h2><p>接下来对SCCB总线进行时序分析，下图是本次OV7670模块中SCCB总线的时序图：</p>
+<h2 id="SCCB总线模块"><a href="#SCCB总线模块" class="headerlink" title="SCCB总线模块"></a>SCCB总线模块<a id="sccb总线模块a"></a></h2><p>接下来对SCCB总线进行时序分析，下图是本次OV7670模块中SCCB总线的时序图：</p>
 <p><a id="SCCB_Timing"></a></p>
 <p><img src="/2023/01/18/OV7670%E6%91%84%E5%83%8F%E5%A4%B4/SCCB%E6%97%B6%E5%BA%8F%E5%9B%BE.png" alt="SCCB时序"><center>图一 SCCB总线时序图</center></p>
 <p>其中对于SCCB时序图中各个时间t的取值范围以及相关含义如下表所示：</p>
@@ -504,7 +504,7 @@
 <li><p>读操作：<br><img src="/2023/01/18/OV7670%E6%91%84%E5%83%8F%E5%A4%B4/Read_Data_0.png" alt="Read_Data_0"><br><img src="/2023/01/18/OV7670%E6%91%84%E5%83%8F%E5%A4%B4/Read_Data_1.png" alt="Read_Data_1"><center>图六 SCCB读操作</center><br>SCCB的读操作是先进行两个阶段ID Address和Sub-address，得到确定的从机地址和目标寄存器地址，之后的两个阶段先是重复ID Address再进行Read Data操作，读取所需要的值。前面三个阶段时序前面写操作已经叙述完，后面主要是对Read Data阶段进行时序分析，下面是Read Data阶段的时序图：<br><img src="/2023/01/18/OV7670%E6%91%84%E5%83%8F%E5%A4%B4/Read_Data.png" alt="Read_Data"><center>图七 Read Data时序</center><br>本阶段中SIO_D的数据由从机发送，前8位依旧为数据位，最后一位为NA位，此时SIO_D需要被主机驱动拉高。<br>注：上面时序图中SIO0_OE_M_为主机的SIO_D使能信号，低电平有效，即低电平时是由主机控制SIO_D信号，SIO0_OE_S_即为从机的SIO_D使能信号，其他亦然。</p>
 </li>
 </ul>
-<h2 id="DVP协议模块"><a href="#DVP协议模块" class="headerlink" title="DVP协议模块"></a>DVP协议模块<a id="OV_mod_3"></a></h2><p>DVP全称Digital Video Port，是摄像头数据并行传输协议，包含8-bit或10-bit并行传输数据线、HSYNC(Horizontal sync)行同步线、VSYNC(Vertical sync)帧同步线和PCLK(Pixel Clock)时钟同步线。该模块中其时序分成Horizontal Timing（水平脉冲时序）和VGA Frame Timing（VGA帧时序）两大部分。具体时序图如下图所示：<br><img src="/2023/01/18/OV7670%E6%91%84%E5%83%8F%E5%A4%B4/Horizontal_Timing.png" alt="Horizontal Timing"><center>图八 Horizontal Timing时序</center><br><img src="/2023/01/18/OV7670%E6%91%84%E5%83%8F%E5%A4%B4/VGA_Frame_Timing.png" alt="VGA Frame Timing"><center>图九 VGA Frame Timing时序</center><br>上面两张时序图中的时序要求如下表所示：</p>
+<h2 id="DVP协议模块"><a href="#DVP协议模块" class="headerlink" title="DVP协议模块"></a>DVP协议模块<a id="dvp协议模块a"></a></h2><p>DVP全称Digital Video Port，是摄像头数据并行传输协议，包含8-bit或10-bit并行传输数据线、HSYNC(Horizontal sync)行同步线、VSYNC(Vertical sync)帧同步线和PCLK(Pixel Clock)时钟同步线。该模块中其时序分成Horizontal Timing（水平脉冲时序）和VGA Frame Timing（VGA帧时序）两大部分。具体时序图如下图所示：<br><img src="/2023/01/18/OV7670%E6%91%84%E5%83%8F%E5%A4%B4/Horizontal_Timing.png" alt="Horizontal Timing"><center>图八 Horizontal Timing时序</center><br><img src="/2023/01/18/OV7670%E6%91%84%E5%83%8F%E5%A4%B4/VGA_Frame_Timing.png" alt="VGA Frame Timing"><center>图九 VGA Frame Timing时序</center><br>上面两张时序图中的时序要求如下表所示：</p>
 <table>
 <thead>
 <tr>
