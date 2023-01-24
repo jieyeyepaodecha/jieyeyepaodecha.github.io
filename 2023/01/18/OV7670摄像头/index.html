@@ -1,0 +1,823 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 6.3.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/blog_icon.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/blog_icon.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/blog_icon.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"example.com","root":"/","scheme":"Pisces","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="OV7670摄像头模块 主体信号输入模块 SCCB总线模块 DVP协议模块       OV7670摄像头模块OV7670&#x2F;OV7171 CAMERACHIPTM 图像传感器，体积小、工作电压低，提供单片 VGA 摄像头和影像处理器的所有功能。通过 SCCB 总线控制，可以输出整帧、子采样、取窗口等方式的各种分辨率 8 位影响数据。所有图像处理功能过程包括伽玛曲线、白平衡、饱">
+<meta property="og:type" content="article">
+<meta property="og:title" content="OV7670摄像头">
+<meta property="og:url" content="http://example.com/2023/01/18/OV7670%E6%91%84%E5%83%8F%E5%A4%B4/index.html">
+<meta property="og:site_name" content="LiuJJ的博客">
+<meta property="og:description" content="OV7670摄像头模块 主体信号输入模块 SCCB总线模块 DVP协议模块       OV7670摄像头模块OV7670&#x2F;OV7171 CAMERACHIPTM 图像传感器，体积小、工作电压低，提供单片 VGA 摄像头和影像处理器的所有功能。通过 SCCB 总线控制，可以输出整帧、子采样、取窗口等方式的各种分辨率 8 位影响数据。所有图像处理功能过程包括伽玛曲线、白平衡、饱">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://example.com/2023/01/18/OV7670%E6%91%84%E5%83%8F%E5%A4%B4/OV7670%E5%86%85%E9%83%A8%E6%A1%86%E6%9E%B6%E5%9B%BE.png">
+<meta property="og:image" content="http://example.com/2023/01/18/OV7670%E6%91%84%E5%83%8F%E5%A4%B4/SCCB%E6%97%B6%E5%BA%8F%E5%9B%BE.png">
+<meta property="og:image" content="http://example.com/2023/01/18/OV7670%E6%91%84%E5%83%8F%E5%A4%B4/SCCB%E5%86%99%E6%93%8D%E4%BD%9C.png">
+<meta property="og:image" content="http://example.com/2023/01/18/OV7670%E6%91%84%E5%83%8F%E5%A4%B4/ID_Address.png">
+<meta property="og:image" content="http://example.com/2023/01/18/OV7670%E6%91%84%E5%83%8F%E5%A4%B4/Sub_address.png">
+<meta property="og:image" content="http://example.com/2023/01/18/OV7670%E6%91%84%E5%83%8F%E5%A4%B4/Write%20Data.png">
+<meta property="og:image" content="http://example.com/2023/01/18/OV7670%E6%91%84%E5%83%8F%E5%A4%B4/Read_Data_0.png">
+<meta property="og:image" content="http://example.com/2023/01/18/OV7670%E6%91%84%E5%83%8F%E5%A4%B4/Read_Data_1.png">
+<meta property="og:image" content="http://example.com/2023/01/18/OV7670%E6%91%84%E5%83%8F%E5%A4%B4/Read_Data.png">
+<meta property="og:image" content="http://example.com/2023/01/18/OV7670%E6%91%84%E5%83%8F%E5%A4%B4/Horizontal_Timing.png">
+<meta property="og:image" content="http://example.com/2023/01/18/OV7670%E6%91%84%E5%83%8F%E5%A4%B4/VGA_Frame_Timing.png">
+<meta property="og:image" content="http://example.com/2023/01/18/OV7670%E6%91%84%E5%83%8F%E5%A4%B4/RGB565.png">
+<meta property="og:image" content="http://example.com/2023/01/18/OV7670%E6%91%84%E5%83%8F%E5%A4%B4/RGB555.png">
+<meta property="og:image" content="http://example.com/2023/01/18/OV7670%E6%91%84%E5%83%8F%E5%A4%B4/RGB444.png">
+<meta property="article:published_time" content="2023-01-18T06:57:39.000Z">
+<meta property="article:modified_time" content="2023-01-24T13:44:13.674Z">
+<meta property="article:author" content="杰爷爷泡的茶">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://example.com/2023/01/18/OV7670%E6%91%84%E5%83%8F%E5%A4%B4/OV7670%E5%86%85%E9%83%A8%E6%A1%86%E6%9E%B6%E5%9B%BE.png">
+
+<link rel="canonical" href="http://example.com/2023/01/18/OV7670%E6%91%84%E5%83%8F%E5%A4%B4/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>OV7670摄像头 | LiuJJ的博客</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">LiuJJ的博客</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="archive fa-fw"></i>归档</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="th fa-fw"></i>分类</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="tags fa-fw"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="user fa-fw"></i>关于</a>
+
+  </li>
+        <li class="menu-item menu-item-resources">
+
+    <a href="/resources/" rel="section"><i class="download fa-fw"></i>资源</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2023/01/18/OV7670%E6%91%84%E5%83%8F%E5%A4%B4/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.png">
+      <meta itemprop="name" content="杰爷爷泡的茶">
+      <meta itemprop="description" content="记录学习过程，发现问题提高能力">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="LiuJJ的博客">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          OV7670摄像头
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2023-01-18 14:57:39" itemprop="dateCreated datePublished" datetime="2023-01-18T14:57:39+08:00">2023-01-18</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2023-01-24 21:44:13" itemprop="dateModified" datetime="2023-01-24T21:44:13+08:00">2023-01-24</time>
+              </span>
+
+          
+            <span class="post-meta-item" title="阅读次数" id="busuanzi_container_page_pv" style="display: none;">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span id="busuanzi_value_page_pv"></span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <!-- 目录 -->
+
+<!-- @import "[TOC]" {cmd="toc" depthFrom=1 depthTo=6 orderedList=false} -->
+<!-- code_chunk_output -->
+
+<ul>
+<li><a href="#-ov7670%E6%91%84%E5%83%8F%E5%A4%B4%E6%A8%A1%E5%9D%97">OV7670摄像头模块</a><ul>
+<li><a href="#-%E4%B8%BB%E4%BD%93%E4%BF%A1%E5%8F%B7%E8%BE%93%E5%85%A5%E6%A8%A1%E5%9D%97a-idov_mod_1a">主体信号输入模块</a></li>
+<li><a href="#-sccb%E6%80%BB%E7%BA%BF%E6%A8%A1%E5%9D%97a-idov_mod_2a">SCCB总线模块</a></li>
+<li><a href="#-dvp%E5%8D%8F%E8%AE%AE%E6%A8%A1%E5%9D%97a-idov_mod_3a">DVP协议模块</a></li>
+</ul>
+</li>
+</ul>
+<!-- /code_chunk_output -->
+
+<!-- 正文 -->
+<h1 id="OV7670摄像头模块"><a href="#OV7670摄像头模块" class="headerlink" title="OV7670摄像头模块"></a>OV7670摄像头模块</h1><p>OV7670&#x2F;OV7171 CAMERACHIPTM 图像传感器，体积小、工作电压低，提供单片 VGA 摄像头和影像处理器的所有功能。通过 SCCB 总线控制，可以输出整帧、子采样、取窗口等方式的各种分辨率 8 位影响数据。所有图像处理功能过程包括伽玛曲线、白平衡、饱和度、色度等都可以通过 SCCB 接口编程。</p>
+<span id="more"></span>
+<p>其内部框架如下图所示：</p>
+<p><img src="/2023/01/18/OV7670%E6%91%84%E5%83%8F%E5%A4%B4/OV7670%E5%86%85%E9%83%A8%E6%A1%86%E6%9E%B6%E5%9B%BE.png" alt="OV7670内部框架"></p>
+<p>其中主要的引出引脚分别在框架图的下方和右方，整合其功能列表如下表所示：</p>
+<table>
+<thead>
+<tr>
+<th align="center">名称</th>
+<th align="center">类型</th>
+<th align="center">功能</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">XCLK</td>
+<td align="center">输入</td>
+<td align="center">系统时钟输入</td>
+</tr>
+<tr>
+<td align="center">STROBE</td>
+<td align="center">输出</td>
+<td align="center">LED&#x2F;频闪控制输出</td>
+</tr>
+<tr>
+<td align="center">HREF</td>
+<td align="center">输出</td>
+<td align="center">行同步</td>
+</tr>
+<tr>
+<td align="center">PCLK</td>
+<td align="center">输出</td>
+<td align="center">像素时钟</td>
+</tr>
+<tr>
+<td align="center">VSYNC</td>
+<td align="center">输出</td>
+<td align="center">帧同步</td>
+</tr>
+<tr>
+<td align="center">RESET</td>
+<td align="center">输入</td>
+<td align="center">初始化所有寄存器为默认值 0：RESET模式； 1：一般模式</td>
+</tr>
+<tr>
+<td align="center">PWDN</td>
+<td align="center">输入 <sup id="fnref:1"><a href="#fn:1" rel="footnote">1</a></sup></td>
+<td align="center">POWER DOWN模式选择 0：工作；1：PD模式</td>
+</tr>
+<tr>
+<td align="center">SIO_C</td>
+<td align="center">输入</td>
+<td align="center">SCCB时钟</td>
+</tr>
+<tr>
+<td align="center">SIO_D</td>
+<td align="center">输入&#x2F;输出</td>
+<td align="center">SCCB数据</td>
+</tr>
+<tr>
+<td align="center">D[7:0]</td>
+<td align="center">输出</td>
+<td align="center">8位像素数据</td>
+</tr>
+</tbody></table>
+<br>
+
+<p>关于OV7670模块中，我自己根据自身理解和后面FPGA模块设计将整个模块分成三个部分</p>
+<ul>
+<li><a href="#OV_mod_1">主体信号输入模块</a>：整个模块的XCLK时钟信号、RESET复位信号、PWDN信号。</li>
+<li><a href="#OV_mod_2">SCCB总线模块</a>：SIO_C、SIO_D组成的SCCB总线，用于和OV7670模块进行通信用于读写OV7670模块内的寄存器，配置OV7670。</li>
+<li><a href="#OV_mod_3">DVP协议模块</a>：HREF、VSYNC、PCLK和8位像素数据，输出图像像素的相关信息。</li>
+</ul>
+<h2 id="主体信号输入模块"><a href="#主体信号输入模块" class="headerlink" title="主体信号输入模块"></a>主体信号输入模块<a id="OV_mod_1"></a></h2><p>XCLK信号是外部输入进OV7670的系统时钟信号，RESET复位信号就是简简单单的复位信号，PWDN信号全称是POWER DOWN，省电模式。该部分主要是列出XCLK时钟信号的时序约束条件，其条件如下图所示：</p>
+<p><a id="RGB输出稳定时间"></a></p>
+<table>
+<thead>
+<tr>
+<th align="center">名称</th>
+<th align="center">参数</th>
+<th align="center">最小值</th>
+<th align="center">典型值</th>
+<th align="center">最大值</th>
+<th align="center">单位</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">f<sub>CLK</sub></td>
+<td align="center">输入时钟频率</td>
+<td align="center">10</td>
+<td align="center">24</td>
+<td align="center">48</td>
+<td align="center">MHz</td>
+</tr>
+<tr>
+<td align="center">t<sub>CLK</sub></td>
+<td align="center">输入时钟周期</td>
+<td align="center">21</td>
+<td align="center">42</td>
+<td align="center">100</td>
+<td align="center">ns</td>
+</tr>
+<tr>
+<td align="center">t<sub>CLK:DC</sub></td>
+<td align="center">时钟占空比</td>
+<td align="center">45</td>
+<td align="center">50</td>
+<td align="center">55</td>
+<td align="center">%</td>
+</tr>
+<tr>
+<td align="center">t<sub>S:RESET</sub></td>
+<td align="center">软件&#x2F;硬件复位后稳定时间</td>
+<td align="center">&#x2F;</td>
+<td align="center">&#x2F;</td>
+<td align="center">1</td>
+<td align="center">ms</td>
+</tr>
+<tr>
+<td align="center">t<sub>S:REG</sub></td>
+<td align="center">寄存器改变后稳定时间（10帧图像的时间）</td>
+<td align="center">&#x2F;</td>
+<td align="center">&#x2F;</td>
+<td align="center">300</td>
+<td align="center">ms</td>
+</tr>
+</tbody></table>
+<h2 id="SCCB总线模块"><a href="#SCCB总线模块" class="headerlink" title="SCCB总线模块"></a>SCCB总线模块<a id="OV_mod_2"></a></h2><p>接下来对SCCB总线进行时序分析，下图是本次OV7670模块中SCCB总线的时序图：</p>
+<p><a id="SCCB_Timing"></a></p>
+<p><img src="/2023/01/18/OV7670%E6%91%84%E5%83%8F%E5%A4%B4/SCCB%E6%97%B6%E5%BA%8F%E5%9B%BE.png" alt="SCCB时序"><center>图一 SCCB总线时序图</center></p>
+<p>其中对于SCCB时序图中各个时间t的取值范围以及相关含义如下表所示：</p>
+<table>
+<thead>
+<tr>
+<th align="center">名称</th>
+<th align="center">参数</th>
+<th align="center">最小值</th>
+<th align="center">典型值</th>
+<th align="center">最大值</th>
+<th align="center">单位</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">f<sub>SIO_C</sub></td>
+<td align="center">SCCB时钟频率</td>
+<td align="center">100</td>
+<td align="center">&#x2F;</td>
+<td align="center">400</td>
+<td align="center">KHz</td>
+</tr>
+<tr>
+<td align="center">t<sub>SU:STA</sub></td>
+<td align="center">开始条件建立时间</td>
+<td align="center">600</td>
+<td align="center">&#x2F;</td>
+<td align="center">&#x2F;</td>
+<td align="center">ns</td>
+</tr>
+<tr>
+<td align="center">t<sub>HD:STA</sub></td>
+<td align="center">开始条件保持时间</td>
+<td align="center">600</td>
+<td align="center">&#x2F;</td>
+<td align="center">&#x2F;</td>
+<td align="center">ns</td>
+</tr>
+<tr>
+<td align="center">t<sub>SU:DAT</sub></td>
+<td align="center">数据建立时间</td>
+<td align="center">100</td>
+<td align="center">&#x2F;</td>
+<td align="center">&#x2F;</td>
+<td align="center">ns</td>
+</tr>
+<tr>
+<td align="center">t<sub>HD:DAT</sub></td>
+<td align="center">数据保持时间</td>
+<td align="center">0</td>
+<td align="center">&#x2F;</td>
+<td align="center">&#x2F;</td>
+<td align="center">us</td>
+</tr>
+<tr>
+<td align="center">t<sub>SU:STO</sub></td>
+<td align="center">停止条件建立时间</td>
+<td align="center">600</td>
+<td align="center">&#x2F;</td>
+<td align="center">&#x2F;</td>
+<td align="center">ns</td>
+</tr>
+<tr>
+<td align="center">t<sub>HIGH</sub></td>
+<td align="center">时钟高电平时间</td>
+<td align="center">600</td>
+<td align="center">&#x2F;</td>
+<td align="center">&#x2F;</td>
+<td align="center">ns</td>
+</tr>
+<tr>
+<td align="center">t<sub>LOW</sub></td>
+<td align="center">时钟低电平时间</td>
+<td align="center">1.3</td>
+<td align="center">&#x2F;</td>
+<td align="center">&#x2F;</td>
+<td align="center">us</td>
+</tr>
+<tr>
+<td align="center">t<sub>BUF</sub></td>
+<td align="center">从新开始前的总线空闲时间</td>
+<td align="center">1.3</td>
+<td align="center">&#x2F;</td>
+<td align="center">&#x2F;</td>
+<td align="center">us</td>
+</tr>
+<tr>
+<td align="center">t<sub>AA</sub></td>
+<td align="center">SIO_C从低到输出数据有效时间</td>
+<td align="center">100</td>
+<td align="center">&#x2F;</td>
+<td align="center">900</td>
+<td align="center">ns</td>
+</tr>
+<tr>
+<td align="center">t<sub>DH</sub></td>
+<td align="center">数据输出保持时间</td>
+<td align="center">50</td>
+<td align="center">&#x2F;</td>
+<td align="center">&#x2F;</td>
+<td align="center">ns</td>
+</tr>
+<tr>
+<td align="center">t<sub>F</sub>、t<sub>R</sub></td>
+<td align="center">SCCB上升&#x2F;下降时间</td>
+<td align="center">&#x2F;</td>
+<td align="center">&#x2F;</td>
+<td align="center">300</td>
+<td align="center">ns</td>
+</tr>
+</tbody></table>
+<p>完整的SCCB总线一共包含三组信号线分别是SIO_C、SIO_D和SCCB_E。 </p>
+<ul>
+<li>SIO_C信号是单向、高有效的时钟信号，是由主器件驱动。在SCCB总线处于空闲状态时，需主机需要将SIO_C信号拉高，在传输开始以后将SIO_C信号拉低，此外SIO_C时钟信号最大周期为10us，既最小频率为100KHz。</li>
+<li>SIO_D信号是双向的数据信号，可以由主器件或从器件驱动。SIO_D在传输过程中高电平即为逻辑1，此外只有在SIO_C被拉低后SIO_D才会发生数据的传输。其中后面会介绍在传输一组数据时将会遇到的D’ont-Care位和NA位的相关时序信息。</li>
+<li>SCCB_E信号是一个单向的、低有效的控制信号，是由主器件驱动，表示数据传输的开始或停止。SCCB_E电平的高到低的过渡表示开始传输，低到高的过渡表示停止传输。在数据传输过程中，SCCB_E必须保持在逻辑0。SCCB_E的逻辑1表示总线是空闲的。</li>
+</ul>
+<p>在本次的模块中由于只存在一个从机所以，本次仅采用2线操作，默认将SCCB_E信号拉低处理。SCCB总线传输过程中一个阶段(Phase)包含9个bit，9个bit中前8位为数据传输位，数据从最高位开始传输。SCCB一次完整数据传输可以包含多个阶段，其中区分为写操作或读操作，写操作包含3个阶段,读操作包含2个阶段分两次进行一共4个阶段。下面介绍两种操作的具体时序：</p>
+<ul>
+<li><p>写操作：<br><img src="/2023/01/18/OV7670%E6%91%84%E5%83%8F%E5%A4%B4/SCCB%E5%86%99%E6%93%8D%E4%BD%9C.png" alt="SCCB写操作"><center>图二 SCCB写操作</center><br>由图二可知写操作分3个阶段，首先是ID地址阶段，用于确定访问的从机地址，之后是寄存器地址阶段用于对特定地址的寄存器进行写操作，最后是写数据阶段，顾名思义就是写入特定的数据至寄存器中。第一阶段ID地址的时序图如下图所示：<br><img src="/2023/01/18/OV7670%E6%91%84%E5%83%8F%E5%A4%B4/ID_Address.png" alt="ID_Address"><center>图三 ID Address时序</center><br>该阶段由主机发送，其中前7位为选择从机地址一共可以识别128个从机地址，第八位为读&#x2F;写标志位，1代表读操作，0代表写操作，第九位为D’ont Care位，此时主机需要停止读取SIO_D上的信号，避免传播未知的总线状态。第二阶段寄存器地址的时序图如下图所示：<br><img src="/2023/01/18/OV7670%E6%91%84%E5%83%8F%E5%A4%B4/Sub_address.png" alt="Sub-address"><center>图四 Sub-address时序</center><br>在写操作中该阶段为主机发送，前8位为主机打算访问从机寄存器地址，最后一位为D’ont Care位。第三阶段写数据的时序图如下图所示：<br><img src="/2023/01/18/OV7670%E6%91%84%E5%83%8F%E5%A4%B4/Write%20Data.png" alt="Sub-address"><center>图五 Write Data时序</center><br>该阶段为主机发送，前8位为主机写入从机寄存器的数据，最后一位为D’ont Care位。最后需要注意停止位的时序要求，其具体要求可以看<a href="#SCCB_Timing">图一SCCB总线</a>。</p>
+<br>
+</li>
+<li><p>读操作：<br><img src="/2023/01/18/OV7670%E6%91%84%E5%83%8F%E5%A4%B4/Read_Data_0.png" alt="Read_Data_0"><br><img src="/2023/01/18/OV7670%E6%91%84%E5%83%8F%E5%A4%B4/Read_Data_1.png" alt="Read_Data_1"><center>图六 SCCB读操作</center><br>SCCB的读操作是先进行两个阶段ID Address和Sub-address，得到确定的从机地址和目标寄存器地址，之后的两个阶段先是重复ID Address再进行Read Data操作，读取所需要的值。前面三个阶段时序前面写操作已经叙述完，后面主要是对Read Data阶段进行时序分析，下面是Read Data阶段的时序图：<br><img src="/2023/01/18/OV7670%E6%91%84%E5%83%8F%E5%A4%B4/Read_Data.png" alt="Read_Data"><center>图七 Read Data时序</center><br>本阶段中SIO_D的数据由从机发送，前8位依旧为数据位，最后一位为NA位，此时SIO_D需要被主机驱动拉高。<br>注：上面时序图中SIO0_OE_M_为主机的SIO_D使能信号，低电平有效，即低电平时是由主机控制SIO_D信号，SIO0_OE_S_即为从机的SIO_D使能信号，其他亦然。</p>
+</li>
+</ul>
+<h2 id="DVP协议模块"><a href="#DVP协议模块" class="headerlink" title="DVP协议模块"></a>DVP协议模块<a id="OV_mod_3"></a></h2><p>DVP全称Digital Video Port，是摄像头数据并行传输协议，包含8-bit或10-bit并行传输数据线、HSYNC(Horizontal sync)行同步线、VSYNC(Vertical sync)帧同步线和PCLK(Pixel Clock)时钟同步线。该模块中其时序分成Horizontal Timing（水平脉冲时序）和VGA Frame Timing（VGA帧时序）两大部分。具体时序图如下图所示：<br><img src="/2023/01/18/OV7670%E6%91%84%E5%83%8F%E5%A4%B4/Horizontal_Timing.png" alt="Horizontal Timing"><center>图八 Horizontal Timing时序</center><br><img src="/2023/01/18/OV7670%E6%91%84%E5%83%8F%E5%A4%B4/VGA_Frame_Timing.png" alt="VGA Frame Timing"><center>图九 VGA Frame Timing时序</center><br>上面两张时序图中的时序要求如下表所示：</p>
+<table>
+<thead>
+<tr>
+<th align="center">名称</th>
+<th align="center">参数</th>
+<th align="center">最小值</th>
+<th align="center">典型值</th>
+<th align="center">最大值</th>
+<th align="center">单位</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">f<sub>PCLK</sub></td>
+<td align="center">PCLK频率</td>
+<td align="center">&#x2F;</td>
+<td align="center">&#x2F;</td>
+<td align="center">96</td>
+<td align="center">MHz</td>
+</tr>
+<tr>
+<td align="center">t<sub>PHH</sub></td>
+<td align="center">PCLK 下降沿到 HREF 上升沿时间</td>
+<td align="center">0</td>
+<td align="center">&#x2F;</td>
+<td align="center">5</td>
+<td align="center">ns</td>
+</tr>
+<tr>
+<td align="center">t<sub>PHL</sub></td>
+<td align="center">PCLK 下降沿到 HREF 下降沿时间</td>
+<td align="center">0</td>
+<td align="center">&#x2F;</td>
+<td align="center">5</td>
+<td align="center">ns</td>
+</tr>
+<tr>
+<td align="center">t<sub>SU</sub></td>
+<td align="center">D[7:0]数据端口数据建立时间</td>
+<td align="center">15</td>
+<td align="center">&#x2F;</td>
+<td align="center">&#x2F;</td>
+<td align="center">ns</td>
+</tr>
+<tr>
+<td align="center">t<sub>HD</sub></td>
+<td align="center">D[7:0]数据端口数据保持时间</td>
+<td align="center">8</td>
+<td align="center">&#x2F;</td>
+<td align="center">&#x2F;</td>
+<td align="center">ns</td>
+</tr>
+<tr>
+<td align="center">t<sub>PDV</sub></td>
+<td align="center">PCLK下降沿到数据输出有效的时间</td>
+<td align="center">&#x2F;</td>
+<td align="center">&#x2F;</td>
+<td align="center">5</td>
+<td align="center">ns</td>
+</tr>
+</tbody></table>
+<p>此外在本次使用的摄像头OV7670支持多种输出图像格式，包含8位RGB raw，8位YcbCr和8位RGB 565&#x2F;555&#x2F;444。关于这几种输出格式的Byte具体内容，下面列举了RGB 565&#x2F;555&#x2F;444的时序图：<br><img src="/2023/01/18/OV7670%E6%91%84%E5%83%8F%E5%A4%B4/RGB565.png" alt="RGB 565"><center>图十 RGB 565 时序图</center><br><img src="/2023/01/18/OV7670%E6%91%84%E5%83%8F%E5%A4%B4/RGB555.png" alt="RGB 555"><center>图十一 RGB 555 时序图</center><br><img src="/2023/01/18/OV7670%E6%91%84%E5%83%8F%E5%A4%B4/RGB444.png" alt="RGB 444"><center>图十二 RGB 444 时序图</center></p>
+<p>此外又由主体模块中表格中<a href="#RGB%E8%BE%93%E5%87%BA%E7%A8%B3%E5%AE%9A%E6%97%B6%E9%97%B4">t<sub>S:REG</sub></a>参数内容所示寄存器修改后需要10帧图像才可以稳定输出，所以在设计时初始化后前十帧数据需要丢弃。</p>
+<p>至此基本上对于OV7670模块的基本介绍已经全部叙述完，后续有额外内容会继续补充，后面博客将会基于本篇的内容进行FPGA Verilog程序设计。</p>
+<div id="footnotes"><hr><div id="footnotelist"><ol style="list-style:none; padding-left: 0;"><li id="fn:1"><span style="display: inline-block; vertical-align: top; padding-right: 10px;">1.</span><span style="display: inline-block; vertical-align: top;">PDWN引脚内部接有下拉电阻。</span><a href="#fnref:1" rev="footnote"> ↩</a></li></ol></div></div>
+    </div>
+
+    
+    
+    
+
+    
+      <div>
+        <div>
+    
+        <div style="text-align:center;color: #ccc;font-size:24px;">-------------本文结束<i class="fa fa-bed"></i>感谢您的阅读-------------</div>
+    
+</div>
+      </div>
+    
+
+      <footer class="post-footer">
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2023/01/16/%E7%AC%AC%E4%B8%80%E7%AF%87%E5%8D%9A%E5%AE%A2/" rel="prev" title="测试博客">
+      <i class="fa fa-chevron-left"></i> 测试博客
+    </a></div>
+      <div class="post-nav-item"></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#OV7670%E6%91%84%E5%83%8F%E5%A4%B4%E6%A8%A1%E5%9D%97"><span class="nav-number">1.</span> <span class="nav-text">OV7670摄像头模块</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%BB%E4%BD%93%E4%BF%A1%E5%8F%B7%E8%BE%93%E5%85%A5%E6%A8%A1%E5%9D%97"><span class="nav-number">1.1.</span> <span class="nav-text">主体信号输入模块</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#SCCB%E6%80%BB%E7%BA%BF%E6%A8%A1%E5%9D%97"><span class="nav-number">1.2.</span> <span class="nav-text">SCCB总线模块</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#DVP%E5%8D%8F%E8%AE%AE%E6%A8%A1%E5%9D%97"><span class="nav-number">1.3.</span> <span class="nav-text">DVP协议模块</span></a></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="杰爷爷泡的茶"
+      src="/images/avatar.png">
+  <p class="site-author-name" itemprop="name">杰爷爷泡的茶</p>
+  <div class="site-description" itemprop="description">记录学习过程，发现问题提高能力</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">2</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="mailto:liujj991011@163.com" title="E-Mail → mailto:liujj991011@163.com" rel="noopener" target="_blank"><i class="envelope fa-fw"></i>E-Mail</a>
+      </span>
+  </div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2023</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">杰爷爷泡的茶</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://pisces.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Pisces</a> 强力驱动
+  </div>
+
+<div class="theme-info">
+  <div class="powered-by"></div>
+  <span class="post-count">博客全站共2.3k字</span>
+</div>
+
+
+    <script async src="//dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+    <span id="busuanzi_container_site_pv">总访问量<span id="busuanzi_value_site_pv"></span>次</span>
+    <span class="post-meta-divider">|</span>
+    <span id="busuanzi_container_site_uv">总访客数<span id="busuanzi_value_site_uv"></span>人</span>
+    <span class="post-meta-divider">|</span>
+<!-- 不蒜子计数初始值纠正 -->
+<script>
+$(document).ready(function() {
+
+    var int = setInterval(fixCount, 50);  // 50ms周期检测函数
+    var countOffset = 20000;  // 初始化首次数据
+
+    function fixCount() {            
+       if (document.getElementById("busuanzi_container_site_pv").style.display != "none")
+        {
+            $("#busuanzi_value_site_pv").html(parseInt($("#busuanzi_value_site_pv").html()) + countOffset); 
+            clearInterval(int);
+        }                  
+        if ($("#busuanzi_container_site_pv").css("display") != "none")
+        {
+            $("#busuanzi_value_site_uv").html(parseInt($("#busuanzi_value_site_uv").html()) + countOffset); // 加上初始数据 
+            clearInterval(int); // 停止检测
+        }  
+    }
+       	
+});
+</script> 
+
+        
+<div class="busuanzi-count">
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    <span class="post-meta-item" id="busuanzi_container_site_uv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-user"></i>
+      </span>
+      <span class="site-uv" title="总访客量">
+        <span id="busuanzi_value_site_uv"></span>
+      </span>
+    </span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item" id="busuanzi_container_site_pv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-eye"></i>
+      </span>
+      <span class="site-pv" title="总访问量">
+        <span id="busuanzi_value_site_pv"></span>
+      </span>
+    </span>
+</div>
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+</body>
+</html>
