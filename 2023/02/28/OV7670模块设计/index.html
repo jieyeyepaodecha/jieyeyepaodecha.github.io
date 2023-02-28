@@ -1,0 +1,525 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 6.3.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/blog_icon.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/blog_icon.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/blog_icon.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"example.com","root":"/","scheme":"Pisces","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="简介：根据上一篇博文OV7670摄像头所介绍，本篇文章将会讲述根据此篇博客所设计的Verilog代码">
+<meta property="og:type" content="article">
+<meta property="og:title" content="OV7670模块设计">
+<meta property="og:url" content="http://example.com/2023/02/28/OV7670%E6%A8%A1%E5%9D%97%E8%AE%BE%E8%AE%A1/index.html">
+<meta property="og:site_name" content="LiuJJ的博客">
+<meta property="og:description" content="简介：根据上一篇博文OV7670摄像头所介绍，本篇文章将会讲述根据此篇博客所设计的Verilog代码">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2023-02-28T15:29:20.000Z">
+<meta property="article:modified_time" content="2023-02-28T16:44:12.561Z">
+<meta property="article:author" content="杰爷爷泡的茶">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="http://example.com/2023/02/28/OV7670%E6%A8%A1%E5%9D%97%E8%AE%BE%E8%AE%A1/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>OV7670模块设计 | LiuJJ的博客</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">LiuJJ的博客</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="archive fa-fw"></i>归档</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="th fa-fw"></i>分类</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="tags fa-fw"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="user fa-fw"></i>关于</a>
+
+  </li>
+        <li class="menu-item menu-item-resources">
+
+    <a href="/resources/" rel="section"><i class="download fa-fw"></i>资源</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2023/02/28/OV7670%E6%A8%A1%E5%9D%97%E8%AE%BE%E8%AE%A1/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.png">
+      <meta itemprop="name" content="杰爷爷泡的茶">
+      <meta itemprop="description" content="记录学习过程，发现问题提高能力">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="LiuJJ的博客">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          OV7670模块设计
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2023-02-28 23:29:20" itemprop="dateCreated datePublished" datetime="2023-02-28T23:29:20+08:00">2023-02-28</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2023-03-01 00:44:12" itemprop="dateModified" datetime="2023-03-01T00:44:12+08:00">2023-03-01</time>
+              </span>
+
+          
+            <span class="post-meta-item" title="阅读次数" id="busuanzi_container_page_pv" style="display: none;">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span id="busuanzi_value_page_pv"></span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <!-- 简介 -->
+
+<p>简介：根据上一篇博文<a target="_blank" rel="noopener" href="https://liujj1011.cn/2023/01/24/OV7670%E6%91%84%E5%83%8F%E5%A4%B4/">OV7670摄像头</a>所介绍，本篇文章将会讲述根据此篇博客所设计的Verilog代码</p>
+<span id="more"></span>
+
+<!-- 目录 -->
+<ul>
+<li><a href="#ov7670%E6%A8%A1%E5%9D%97%E8%AE%BE%E8%AE%A1">OV7670模块设计</a><ul>
+<li><a href="#%E6%95%B4%E4%BD%93%E6%8E%A7%E5%88%B6%E6%A8%A1%E5%9D%97">整体控制模块</a></li>
+<li><a href="#sccb%E6%80%BB%E7%BA%BF%E6%A8%A1%E5%9D%97">SCCB总线模块</a></li>
+<li><a href="#dvp%E5%8D%8F%E8%AE%AE%E6%A8%A1%E5%9D%97">DVP协议模块</a></li>
+</ul>
+</li>
+</ul>
+<!-- 正文 -->
+<h1 id="OV7670模块设计"><a href="#OV7670模块设计" class="headerlink" title="OV7670模块设计"></a>OV7670模块设计</h1><p>在本次设计中我采用自顶向下的设计理念，首先对于整个OV7670模块的大致框架是分成三部分：</p>
+<ul>
+<li>整体控制模块</li>
+<li>SCCB总线模块</li>
+<li>DVP协议模块</li>
+</ul>
+<p>其中整体控制模块是用于由时钟信号、复位信号和PWDN信号组合而成，其作用是提供给OV7670模块时钟信号、复位信号、上电初始化操作和PWDN省电模式的操作。SCCB总线模块是用于初始化OV7670内部寄存器配置。DVP协议模块用于传输图像数据。后面会详细对各个模块进行阐述。</p>
+<h2 id="整体控制模块"><a href="#整体控制模块" class="headerlink" title="整体控制模块"></a>整体控制模块</h2><p>首先该模块主要功能有三个：输出24MHz时钟信号、上电稳定后拉高复位信号和输出SCCB初始化标志。输出24MHz时钟是使用PLL IP核输出，上电后使用计数器累积3ms后拉高复位信号，再过3ms后输出SCCB初始化信号。下方为模块输入输出端口：</p>
+<figure class="highlight verilog"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">ov7670_init (</span><br><span class="line">    <span class="keyword">input</span>	<span class="keyword">wire</span>    sclk,           <span class="comment">//50MHz</span></span><br><span class="line">    <span class="keyword">input</span>	<span class="keyword">wire</span>    rst_n,</span><br><span class="line">    <span class="keyword">output</span>	<span class="keyword">reg</span>	sccb_init_flag, <span class="comment">//SCCB开始写入初始化代码标志</span></span><br><span class="line">    <span class="keyword">output</span>	<span class="keyword">reg</span>	xclk,           <span class="comment">//XCLK时钟 24MHz</span></span><br><span class="line">    <span class="keyword">output</span>	<span class="keyword">reg</span>	reset_n         <span class="comment">//ov7670复位信号，低电平有效</span></span><br><span class="line">);</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<p>模块内部3ms定时器模块如下所示：</p>
+<figure class="highlight verilog"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">parameter</span>	CNT_TIME = <span class="number">149999</span>; <span class="comment">//50MHz的情况下是 3ms</span></span><br><span class="line"><span class="comment">//计数器</span></span><br><span class="line"><span class="keyword">always</span> @(<span class="keyword">posedge</span> sclk <span class="keyword">or</span> <span class="keyword">negedge</span> rst_n)</span><br><span class="line">    <span class="keyword">if</span>(!rst_n)</span><br><span class="line">        cnt_3ms &lt;= <span class="number">&#x27;d0</span>;</span><br><span class="line">    <span class="keyword">else</span> <span class="keyword">if</span>(cnt_3ms == CNT_TIME)</span><br><span class="line">        cnt_3ms &lt;= <span class="number">&#x27;d0</span>;</span><br><span class="line">    <span class="keyword">else</span></span><br><span class="line">        cnt_3ms &lt;= cnt_3ms + <span class="number">1&#x27;b1</span>;</span><br></pre></td></tr></table></figure>
+
+<h2 id="SCCB总线模块"><a href="#SCCB总线模块" class="headerlink" title="SCCB总线模块"></a>SCCB总线模块</h2><p>SCCB总线模块主要是使用状态机对SCCB协议各个部分进行分割和连接。状态机共有4个状态，分别是IDLE（空闲）、START（开始）、SEND（发送）和STOP（停止）。其中状态机根据start_flag、send_flag和stop_flag三个标志位以及对外部使能信号和内部结束信号进行结合的sccb_en总使能信号和sccb配置完成信号的sccb_end结束信号，对sio_c和sio_d进行操作相关代码如下所示：</p>
+<figure class="highlight verilog"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//sio_c时钟生成</span></span><br><span class="line"><span class="keyword">always</span> @(<span class="keyword">posedge</span> sclk <span class="keyword">or</span> <span class="keyword">negedge</span> rst_n)</span><br><span class="line">    <span class="keyword">if</span>(!rst_n)</span><br><span class="line">        sio_c &lt;= <span class="number">1&#x27;b1</span>;</span><br><span class="line">    <span class="keyword">else</span> <span class="keyword">if</span>(start_flag == <span class="number">1&#x27;b1</span> || stop_flag == <span class="number">1&#x27;b1</span>)</span><br><span class="line">        sio_c &lt;= <span class="number">1&#x27;b1</span>;</span><br><span class="line">    <span class="keyword">else</span> <span class="keyword">if</span>(cnt_clk == CNT_TIME)</span><br><span class="line">        sio_c &lt;= !sio_c;</span><br><span class="line">    <span class="keyword">else</span></span><br><span class="line">        sio_c &lt;= sio_c;</span><br><span class="line"></span><br><span class="line"><span class="comment">//sio_d数据</span></span><br><span class="line"><span class="keyword">always</span> @(<span class="keyword">posedge</span> sclk <span class="keyword">or</span> <span class="keyword">negedge</span> rst_n)</span><br><span class="line">    <span class="keyword">if</span>(!rst_n)</span><br><span class="line">        sio_d &lt;= <span class="number">1&#x27;b1</span>;</span><br><span class="line">    <span class="keyword">else</span> <span class="keyword">if</span>(start_flag == <span class="number">1&#x27;b1</span> &amp;&amp; reg_cnt != <span class="number">&#x27;d166</span>)</span><br><span class="line">        sio_d &lt;= <span class="number">1&#x27;b0</span>;</span><br><span class="line">    <span class="keyword">else</span> <span class="keyword">if</span>(stop_flag == <span class="number">1&#x27;b1</span> || sccb_end == <span class="number">1&#x27;b1</span>)</span><br><span class="line">        sio_d &lt;= <span class="number">1&#x27;b1</span>;</span><br><span class="line">    <span class="keyword">else</span> <span class="keyword">if</span>(send_flag == <span class="number">1&#x27;b1</span>)<span class="keyword">begin</span></span><br><span class="line">        <span class="keyword">case</span>(data_bit)</span><br><span class="line">            <span class="number">&#x27;d1</span>:    sio_d &lt;= DEVICE_ID[<span class="number">6</span>];</span><br><span class="line">            <span class="number">&#x27;d2</span>:    sio_d &lt;= DEVICE_ID[<span class="number">5</span>];</span><br><span class="line">            <span class="number">&#x27;d3</span>:    sio_d &lt;= DEVICE_ID[<span class="number">4</span>];</span><br><span class="line">            <span class="number">&#x27;d4</span>:    sio_d &lt;= DEVICE_ID[<span class="number">3</span>];</span><br><span class="line">            <span class="number">&#x27;d5</span>:    sio_d &lt;= DEVICE_ID[<span class="number">2</span>];</span><br><span class="line">            <span class="number">&#x27;d6</span>:    sio_d &lt;= DEVICE_ID[<span class="number">1</span>];</span><br><span class="line">            <span class="number">&#x27;d7</span>:    sio_d &lt;= DEVICE_ID[<span class="number">0</span>];</span><br><span class="line">            <span class="number">&#x27;d8</span>:    sio_d &lt;= <span class="number">1&#x27;b0</span>;</span><br><span class="line">            <span class="number">&#x27;d9</span>:    sio_d &lt;= <span class="number">1&#x27;bz</span>;</span><br><span class="line">            <span class="number">&#x27;d10</span>:   sio_d &lt;= sub_addr[<span class="number">7</span>];</span><br><span class="line">            <span class="number">&#x27;d11</span>:   sio_d &lt;= sub_addr[<span class="number">6</span>];</span><br><span class="line">            <span class="number">&#x27;d12</span>:   sio_d &lt;= sub_addr[<span class="number">5</span>];</span><br><span class="line">            <span class="number">&#x27;d13</span>:   sio_d &lt;= sub_addr[<span class="number">4</span>];</span><br><span class="line">            <span class="number">&#x27;d14</span>:   sio_d &lt;= sub_addr[<span class="number">3</span>];</span><br><span class="line">            <span class="number">&#x27;d15</span>:   sio_d &lt;= sub_addr[<span class="number">2</span>];</span><br><span class="line">            <span class="number">&#x27;d16</span>:   sio_d &lt;= sub_addr[<span class="number">1</span>];</span><br><span class="line">            <span class="number">&#x27;d17</span>:   sio_d &lt;= sub_addr[<span class="number">0</span>];</span><br><span class="line">            <span class="number">&#x27;d18</span>:   sio_d &lt;= <span class="number">1&#x27;bz</span>;</span><br><span class="line">            <span class="number">&#x27;d19</span>:   sio_d &lt;= reg_data[<span class="number">7</span>];</span><br><span class="line">            <span class="number">&#x27;d20</span>:   sio_d &lt;= reg_data[<span class="number">6</span>];</span><br><span class="line">            <span class="number">&#x27;d21</span>:   sio_d &lt;= reg_data[<span class="number">5</span>];</span><br><span class="line">            <span class="number">&#x27;d22</span>:   sio_d &lt;= reg_data[<span class="number">4</span>];</span><br><span class="line">            <span class="number">&#x27;d23</span>:   sio_d &lt;= reg_data[<span class="number">3</span>];</span><br><span class="line">            <span class="number">&#x27;d24</span>:   sio_d &lt;= reg_data[<span class="number">2</span>];</span><br><span class="line">            <span class="number">&#x27;d25</span>:   sio_d &lt;= reg_data[<span class="number">1</span>];</span><br><span class="line">            <span class="number">&#x27;d26</span>:   sio_d &lt;= reg_data[<span class="number">0</span>];</span><br><span class="line">            <span class="number">&#x27;d27</span>:   sio_d &lt;= <span class="number">1&#x27;bz</span>;</span><br><span class="line">            <span class="number">&#x27;d28</span>:   sio_d &lt;= <span class="number">1&#x27;b0</span>;</span><br><span class="line">            <span class="keyword">default</span>:sio_d &lt;= sio_d;</span><br><span class="line">        <span class="keyword">endcase</span></span><br><span class="line">    <span class="keyword">end</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="DVP协议模块"><a href="#DVP协议模块" class="headerlink" title="DVP协议模块"></a>DVP协议模块</h2><p>由于传输图像的前10帧由于系统未处于稳定状态，需要舍去，后续的图像则继续传输。所以传输图像的使能信号，在前十帧图像读取后拉高，相关代码如下所示：</p>
+<figure class="highlight verilog"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 前10帧数计数器，前10帧图像因为不稳定，需要舍去。</span></span><br><span class="line"><span class="keyword">reg</span> [<span class="number">3</span>:<span class="number">0</span>] frame_cnt;</span><br><span class="line"></span><br><span class="line"><span class="keyword">always</span> @(<span class="keyword">posedge</span> pclk <span class="keyword">or</span> <span class="keyword">negedge</span> rst_n)</span><br><span class="line">    <span class="keyword">if</span>(!rst_n)</span><br><span class="line">        frame_cnt &lt;= <span class="number">&#x27;d0</span>;</span><br><span class="line">    <span class="keyword">else</span> <span class="keyword">if</span>(frame_cnt == <span class="number">&#x27;d11</span>)</span><br><span class="line">        frame_cnt &lt;= frame_cnt;</span><br><span class="line">    <span class="keyword">else</span> <span class="keyword">if</span>(vsync_rise == <span class="number">1&#x27;b1</span>)</span><br><span class="line">        frame_cnt &lt;= frame_cnt + <span class="number">1&#x27;b1</span>;</span><br><span class="line">    <span class="keyword">else</span></span><br><span class="line">        frame_cnt &lt;= frame_cnt;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 传输图像数据起始信号</span></span><br><span class="line"><span class="keyword">wire</span> frame_en = (frame_cnt == <span class="number">&#x27;d11</span>) ? <span class="number">1&#x27;b1</span> : <span class="number">1&#x27;b0</span>;</span><br></pre></td></tr></table></figure>
+<p>之后又因为读取的OV7670的RGB像素为16位，分两次8位传输。读取之后直接存储进FIFO不利于后期信号传输，容易出现设计缺陷，所以在存储进FIFO前，将两次的8位RGB像素进行合并成为一个完整的16位RGB565数据类型，合并代码如下所示：</p>
+<figure class="highlight verilog"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// RGB565 由16位RGB信号组成，分成两个字节传输</span></span><br><span class="line"><span class="comment">// rgb_cnt值：1：首个字节；2：第二个字节</span></span><br><span class="line"><span class="keyword">reg</span> [<span class="number">1</span>:<span class="number">0</span>] rgb_cnt;</span><br><span class="line"></span><br><span class="line"><span class="keyword">always</span> @(<span class="keyword">posedge</span> pclk <span class="keyword">or</span> <span class="keyword">negedge</span> rst_n)</span><br><span class="line">    <span class="keyword">if</span>(!rst_n)</span><br><span class="line">        rgb_cnt &lt;= <span class="number">&#x27;d0</span>;</span><br><span class="line">    <span class="keyword">else</span> <span class="keyword">if</span>(rgb_cnt == <span class="number">&#x27;d1</span>)</span><br><span class="line">        rgb_cnt &lt;= <span class="number">&#x27;d0</span>;</span><br><span class="line">    <span class="keyword">else</span> <span class="keyword">if</span>(href == <span class="number">1&#x27;b1</span> &amp;&amp; frame_en == <span class="number">1&#x27;b1</span>)</span><br><span class="line">        rgb_cnt &lt;= rgb_cnt + <span class="number">1&#x27;b1</span>;</span><br><span class="line">    <span class="keyword">else</span></span><br><span class="line">        rgb_cnt &lt;= <span class="number">&#x27;d0</span>;</span><br><span class="line"></span><br><span class="line"><span class="comment">// RGB565 数据</span></span><br><span class="line"><span class="keyword">reg</span> [<span class="number">15</span>:<span class="number">0</span>] rgb_565_buf;</span><br><span class="line"></span><br><span class="line"><span class="keyword">always</span> @(<span class="keyword">posedge</span> pclk <span class="keyword">or</span> <span class="keyword">negedge</span> rst_n)</span><br><span class="line">    <span class="keyword">if</span>(!rst_n)</span><br><span class="line">        rgb_565_buf &lt;= <span class="number">&#x27;d0</span>;</span><br><span class="line">    <span class="keyword">else</span> <span class="keyword">if</span>(href == <span class="number">1&#x27;b0</span> &amp;&amp; href_buf == <span class="number">1&#x27;b1</span> &amp;&amp; frame_en == <span class="number">1&#x27;b1</span>)</span><br><span class="line">        rgb_565_buf &lt;= rgb_565_buf;</span><br><span class="line">    <span class="keyword">else</span> <span class="keyword">if</span>(href == <span class="number">1&#x27;b1</span> &amp;&amp; frame_en == <span class="number">1&#x27;b1</span> &amp;&amp; rgb_cnt == <span class="number">&#x27;d0</span>)</span><br><span class="line">        rgb_565_buf &lt;= &#123;D, rgb_565_buf[<span class="number">7</span>:<span class="number">0</span>]&#125;;</span><br><span class="line">    <span class="keyword">else</span> <span class="keyword">if</span>(href == <span class="number">1&#x27;b1</span> &amp;&amp; frame_en == <span class="number">1&#x27;b1</span> &amp;&amp; rgb_cnt == <span class="number">&#x27;d1</span>)</span><br><span class="line">        rgb_565_buf &lt;= &#123;rgb_565_buf[<span class="number">15</span>:<span class="number">8</span>], D&#125;;</span><br><span class="line">    <span class="keyword">else</span></span><br><span class="line">        rgb_565_buf &lt;= <span class="number">&#x27;d0</span>;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 输出到FIFO的RGB数据</span></span><br><span class="line"><span class="keyword">assign</span> rgb_565 = (rgb_cnt == <span class="number">&#x27;d0</span>) ? rgb_565_buf : rgb_565;</span><br></pre></td></tr></table></figure>
+
+<hr>
+<p>备注：在OV7670中，PCLK时钟频率为24MHz，输出一帧图像RGB数据所花费时间为33.3ms，数据量为640×480×16&#x3D;4.9Mbit。</p>
+
+    </div>
+
+    
+    
+    
+
+    
+      <div>
+        <div>
+    
+        <div style="text-align:center;color: #ccc;font-size:24px;">-------------本文结束<i class="fa fa-bed"></i>感谢您的阅读-------------</div>
+    
+</div>
+      </div>
+    
+
+      <footer class="post-footer">
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2023/01/24/OV7670%E6%91%84%E5%83%8F%E5%A4%B4/" rel="prev" title="OV7670摄像头">
+      <i class="fa fa-chevron-left"></i> OV7670摄像头
+    </a></div>
+      <div class="post-nav-item"></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#OV7670%E6%A8%A1%E5%9D%97%E8%AE%BE%E8%AE%A1"><span class="nav-number">1.</span> <span class="nav-text">OV7670模块设计</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%95%B4%E4%BD%93%E6%8E%A7%E5%88%B6%E6%A8%A1%E5%9D%97"><span class="nav-number">1.1.</span> <span class="nav-text">整体控制模块</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#SCCB%E6%80%BB%E7%BA%BF%E6%A8%A1%E5%9D%97"><span class="nav-number">1.2.</span> <span class="nav-text">SCCB总线模块</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#DVP%E5%8D%8F%E8%AE%AE%E6%A8%A1%E5%9D%97"><span class="nav-number">1.3.</span> <span class="nav-text">DVP协议模块</span></a></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="杰爷爷泡的茶"
+      src="/images/avatar.png">
+  <p class="site-author-name" itemprop="name">杰爷爷泡的茶</p>
+  <div class="site-description" itemprop="description">记录学习过程，发现问题提高能力</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">3</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">1</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">1</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="mailto:liujj991011@163.com" title="E-Mail → mailto:liujj991011@163.com" rel="noopener" target="_blank"><i class="envelope fa-fw"></i>E-Mail</a>
+      </span>
+  </div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2023</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">杰爷爷泡的茶</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://pisces.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Pisces</a> 强力驱动
+  </div>
+
+<div class="theme-info">
+  <div class="powered-by"></div>
+  <span class="post-count">博客全站共3.6k字</span>
+</div>
+
+
+    <script async src="//dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+    <span id="busuanzi_container_site_pv">总访问量<span id="busuanzi_value_site_pv"></span>次</span>
+    <span class="post-meta-divider">|</span>
+    <span id="busuanzi_container_site_uv">总访客数<span id="busuanzi_value_site_uv"></span>人</span>
+    <span class="post-meta-divider">|</span>
+<!-- 不蒜子计数初始值纠正 -->
+<script>
+$(document).ready(function() {
+
+    var int = setInterval(fixCount, 50);  // 50ms周期检测函数
+    var countOffset = 20000;  // 初始化首次数据
+
+    function fixCount() {            
+       if (document.getElementById("busuanzi_container_site_pv").style.display != "none")
+        {
+            $("#busuanzi_value_site_pv").html(parseInt($("#busuanzi_value_site_pv").html()) + countOffset); 
+            clearInterval(int);
+        }                  
+        if ($("#busuanzi_container_site_pv").css("display") != "none")
+        {
+            $("#busuanzi_value_site_uv").html(parseInt($("#busuanzi_value_site_uv").html()) + countOffset); // 加上初始数据 
+            clearInterval(int); // 停止检测
+        }  
+    }
+       	
+});
+</script> 
+
+        
+<div class="busuanzi-count">
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    <span class="post-meta-item" id="busuanzi_container_site_uv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-user"></i>
+      </span>
+      <span class="site-uv" title="总访客量">
+        <span id="busuanzi_value_site_uv"></span>
+      </span>
+    </span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item" id="busuanzi_container_site_pv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-eye"></i>
+      </span>
+      <span class="site-pv" title="总访问量">
+        <span id="busuanzi_value_site_pv"></span>
+      </span>
+    </span>
+</div>
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+</body>
+</html>
